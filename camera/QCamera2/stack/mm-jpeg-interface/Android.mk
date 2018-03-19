@@ -1,9 +1,10 @@
-OLD_LOCAL_PATH := $(LOCAL_PATH)
 LOCAL_PATH := $(call my-dir)
+
 include $(CLEAR_VARS)
 
-LOCAL_CFLAGS+= -D_ANDROID_
-LOCAL_CFLAGS += -Wall -Wextra -Werror -Wno-unused-parameter
+LOCAL_CFLAGS += -D_ANDROID_
+
+LOCAL_CFLAGS += -Wall -Wextra -Werror
 
 LOCAL_HEADER_LIBRARIES := generated_kernel_headers
 
@@ -15,15 +16,10 @@ LOCAL_C_INCLUDES += \
     $(LOCAL_PATH)/../../../mm-image-codec/qexif \
     $(LOCAL_PATH)/../../../mm-image-codec/qomx_core
 
-ifeq ($(strip $(TARGET_USES_ION)),true)
-    LOCAL_CFLAGS += -DUSE_ION
-endif
-
-
 ifeq ($(call is-board-platform-in-list, msm8974),true)
-    LOCAL_CFLAGS+= -DMM_JPEG_CONCURRENT_SESSIONS_COUNT=2
+    LOCAL_CFLAGS += -DMM_JPEG_CONCURRENT_SESSIONS_COUNT=2
 else
-    LOCAL_CFLAGS+= -DMM_JPEG_CONCURRENT_SESSIONS_COUNT=1
+    LOCAL_CFLAGS += -DMM_JPEG_CONCURRENT_SESSIONS_COUNT=1
 endif
 
 LOCAL_SRC_FILES := \
@@ -35,12 +31,10 @@ LOCAL_SRC_FILES := \
     src/mm_jpegdec_interface.c \
     src/mm_jpegdec.c
 
-LOCAL_MODULE           := libmmjpeg_interface
+LOCAL_MODULE := libmmjpeg_interface
 LOCAL_32_BIT_ONLY := true
 LOCAL_VENDOR_MODULE := true
 LOCAL_SHARED_LIBRARIES := libdl libcutils liblog libqomx_core
 LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
-
-LOCAL_PATH := $(OLD_LOCAL_PATH)
