@@ -27,10 +27,6 @@ LOCAL_CFLAGS += -DUSE_MEDIA_EXTENSIONS
 #Debug logs are enabled
 #LOCAL_CFLAGS += -DDISABLE_DEBUG_LOG
 
-#ifeq ($(TARGET_USE_VENDOR_CAMERA_EXT),true)
-#LOCAL_CFLAGS += -DUSE_VENDOR_CAMERA_EXT
-#endif
-
 #ifeq ($(TARGET_USES_AOSP),true)
 #LOCAL_CFLAGS += -DVANILLA_HAL
 #endif
@@ -61,12 +57,6 @@ LOCAL_C_INCLUDES += \
         $(TARGET_OUT_HEADERS)/qcom/display
 LOCAL_C_INCLUDES += \
         hardware/qcom/display/libqservice
-
-#ifeq ($(TARGET_USE_VENDOR_CAMERA_EXT),true)
-#LOCAL_C_INCLUDES += hardware/qcom/display/msm8974/libgralloc
-#else
-LOCAL_C_INCLUDES += hardware/qcom/display/libgralloc
-#endif
 
 ifeq ($(TARGET_TS_MAKEUP),true)
 LOCAL_CFLAGS += -DTARGET_TS_MAKEUP
