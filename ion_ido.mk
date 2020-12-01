@@ -16,15 +16,15 @@
 $(call inherit-product, device/xiaomi/ido/full_ido.mk)
 
 # Inherit some common Mokee stuff.
-$(call inherit-product, vendor/mokee/config/common_full_phone.mk)
+$(call inherit-product, vendor/ion/config/common_full_phone.mk)
 
 # Must define platform variant before including any common things
 TARGET_BOARD_PLATFORM_VARIANT := msm8939
-
+TARGET_GAPPS_ARCH := arm64
 # Assert
 TARGET_OTA_ASSERT_DEVICE := ido
 
-PRODUCT_NAME := mokee_ido
+PRODUCT_NAME := ion_ido
 BOARD_VENDOR := xiaomi
 PRODUCT_DEVICE := ido
 

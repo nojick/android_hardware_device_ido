@@ -16,6 +16,8 @@
 # limitations under the License.
 #
 
+
+
 set -e
 
 DEVICE=ido
@@ -27,9 +29,9 @@ INITIAL_COPYRIGHT_YEAR=2019
 MY_DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$MY_DIR" ]]; then MY_DIR="$PWD"; fi
 
-MK_ROOT="$MY_DIR"/../../..
+HAVOC_ROOT="$MY_DIR"/../../..
 
-HELPER="$MK_ROOT"/vendor/mokee/build/tools/extract_utils.sh
+HELPER="$HAVOC_ROOT"/vendor/ion/build/tools/extract_utils.sh
 if [ ! -f "$HELPER" ]; then
     echo "Unable to find helper script at $HELPER"
     exit 1
@@ -37,7 +39,7 @@ fi
 . "$HELPER"
 
 # Initialize the helper
-setup_vendor "$DEVICE" "$VENDOR" "$MK_ROOT"
+setup_vendor "$DEVICE" "$VENDOR" "$HAVOC_ROOT"
 
 # Copyright headers and guards
 write_headers
