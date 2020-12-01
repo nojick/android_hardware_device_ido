@@ -39,7 +39,7 @@ TARGET_PROCESS_SDK_VERSION_OVERRIDE += \
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
-BACKLIGHT_PATH := /sys/class/leds/lcd-backlight/brightness
+
 
 # Dexpreopt
 ifeq ($(HOST_OS),linux)
@@ -64,7 +64,7 @@ TARGET_NO_RPC := true
 USE_DEVICE_SPECIFIC_GPS := true
 
 # HIDL
-DEVICE_MANIFEST_FILE += $(DEVICE_PATH)/manifest.xml
+#DEVICE_MANIFEST_FILE += $(DEVICE_PATH)/manifest.xml
 
 # Init
 TARGET_INIT_VENDOR_LIB := libinit_ido
@@ -73,11 +73,11 @@ TARGET_RECOVERY_DEVICE_MODULES := libinit_ido
 # Kernel
 BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
 TARGET_KERNEL_SOURCE := kernel/xiaomi/msm8916
-TARGET_KERNEL_CONFIG := mokee_ido_defconfig
+TARGET_KERNEL_CONFIG := lineage_ido_defconfig
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
 BOARD_RAMDISK_OFFSET     := 0x02000000
-
+TARGET_KERNEL_ARCH := arm64
 # Power
 TARGET_HAS_NO_POWER_STATS := true
 
