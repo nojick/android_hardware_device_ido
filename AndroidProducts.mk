@@ -14,4 +14,9 @@
 # limitations under the License.
 
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/mokee_ido.mk
+    $(LOCAL_DIR)/ion_ido.mk
+    
+    COMMON_LUNCH_CHOICES := \
+    ion_ido-eng \
+    ion_ido-userdebug \
+    ion_ido-user
