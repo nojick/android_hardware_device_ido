@@ -52,6 +52,7 @@ PRODUCT_PACKAGES += \
     libmm-qcamera \
     libshim_camera \
     Snap
+    Camera2
 
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.4-impl \
