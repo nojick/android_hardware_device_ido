@@ -24,8 +24,7 @@ cc_library_static {
         "external/selinux/libselinux/include",
     ],
     static_libs: [
-        "libbase",
-        "libselinux",
+        "libbase"
     ],
     cflags: ["-Wall"]
 }

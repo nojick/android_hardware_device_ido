@@ -34,6 +34,7 @@
 #include <android-base/properties.h>
 #include <android-base/strings.h>
 
+
 #include "vendor_init.h"
 #include "property_service.h"
 
@@ -44,8 +45,7 @@ char const *heapminfree;
 char const *heapmaxfree;
 
 using android::base::Trim;
-using android::init::property_set;
-
+using android::base::SetProperty;
 void check_device()
 {
     struct sysinfo sys;
@@ -71,18 +71,18 @@ void init_target_properties()
 {
     check_device();
 
-    property_set("dalvik.vm.heapstartsize", heapstartsize);
-    property_set("dalvik.vm.heapgrowthlimit", heapgrowthlimit);
-    property_set("dalvik.vm.heapsize", heapsize);
-    property_set("dalvik.vm.heaptargetutilization", "0.75");
-    property_set("dalvik.vm.heapminfree", heapminfree);
-    property_set("dalvik.vm.heapmaxfree", "8m");
+    SetProperty("dalvik.vm.heapstartsize", heapstartsize);
+    SetProperty("dalvik.vm.heapgrowthlimit", heapgrowthlimit);
+    SetProperty("dalvik.vm.heapsize", heapsize);
+    SetProperty("dalvik.vm.heaptargetutilization", "0.75");
+    SetProperty("dalvik.vm.heapminfree", heapminfree);
+    SetProperty("dalvik.vm.heapmaxfree", "8m");
 
 }
 
 void vendor_load_properties()
 {
     // Init a dummy BT MAC address, will be overwritten later
-    property_set("ro.boot.btmacaddr", "00:00:00:00:00:00");
+    SetProperty("ro.boot.btmacaddr", "00:00:00:00:00:00");
     init_target_properties();
 }
