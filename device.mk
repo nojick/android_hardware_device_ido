@@ -130,8 +130,7 @@ PRODUCT_COPY_FILES += \
 #android.hardware.soundtrigger@2.2 \
 # Permissions
 PRODUCT_COPY_FILES += \
-frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/vendor/etc/permissions/android.hardware.audio.low_latency.xml \
-$(LOCAL_PATH)/configs/qti_whitelist.xml:system/vendor/etc/permissions/qti_whitelist.xml \
+    frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/vendor/etc/permissions/android.hardware.audio.low_latency.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/vendor/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/vendor/etc/permissions/android.hardware.camera.front.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/vendor/etc/permissions/android.hardware.location.gps.xml \
