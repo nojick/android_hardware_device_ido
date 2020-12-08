@@ -17,10 +17,6 @@
 
 $(call inherit-product, vendor/xiaomi/ido/ido-vendor.mk)
 
-TARGET_BOOT_ANIMATION_RES := 720
-PRODUCT_PACKAGES += \
-Dirac
-PRODUCT_PACKAGES += com.android.apex.cts.shim.v1_with_prebuilts.flattened
 # Overlay
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay \
@@ -101,7 +97,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     fstab.qcom \
     init.target.rc \
-    init.qcom.post_boot.sh
 
 # Keylayout
 PRODUCT_COPY_FILES += \
@@ -122,12 +117,11 @@ PRODUCT_PACKAGES += \
 # Media
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/media_profiles_V1_0.xml:system/vendor/etc/media_profiles_V1_0.xml \
-    $(LOCAL_PATH)/configs/media_codecs_performance.xml:system/vendor/etc/media_codecs_performance.xml \
-    $(LOCAL_PATH)/configs/media_codecs_8929.xml:system/vendor/etc/media_codecs_8929.xml \
-    $(LOCAL_PATH)/configs/media_codecs_8939.xml:system/vendor/etc/media_codecs_8939.xml \
-    $(LOCAL_PATH)/configs/media_codecs_performance.xml:system/vendor/etc/media_codecs_performance.xml \
-    $(LOCAL_PATH)/configs/media_codecs_performance_8929.xml:system/vendor/etc/media_codecs_performance_8929.xml \
-    $(LOCAL_PATH)/configs/media_codecs_performance_8939.xml:system/vendor/etc/media_codecs_performance_8939.xml \
+    $(LOCAL_PATH)/configs/media_codecs_performance.xml:system/vendor/etc/media_codecs_performance.xml
+PRODUCT_COPY_FILES += \
+    frameworks/av/services/audiopolicy/config/a2dp_in_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_in_audio_policy_configuration.xml \
+    frameworks/av/services/audiopolicy/config/bluetooth_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_audio_policy_configuration.xml \
+    frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
 # Permissions
 PRODUCT_COPY_FILES += \
 frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/vendor/etc/permissions/android.hardware.audio.low_latency.xml \
@@ -167,11 +161,9 @@ PRODUCT_PACKAGES += \
     android.hardware.health@2.0-impl \
     android.hardware.health@2.0-service
 
-
 # Touch
 PRODUCT_PACKAGES += \
-vendor.lineage.touch@1.0-service
-
+    vendor.lineage.touch@1.0-service
 
 # USB ID
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
