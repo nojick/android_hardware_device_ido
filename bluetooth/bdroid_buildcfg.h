@@ -19,4 +19,5 @@
 
 #define BTM_DEF_LOCAL_NAME   "Xiaomi Redmi 3"
 #define BLUETOOTH_QTI_SW TRUE
+#define BT_CLEAN_TURN_ON_DISABLED TRUE
 #endif
