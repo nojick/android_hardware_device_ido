@@ -191,6 +191,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_wlan_nv.bin:system/vendor/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin \
     $(LOCAL_PATH)/wifi/WCNSS_wlan_dictionary.dat:system/vendor/firmware/wlan/prima/WCNSS_wlan_dictionary.dat
 
+# Widevine DRM
+#PRODUCT_PACKAGES += \
+#    libprotobuf_shim
+
 PRODUCT_PACKAGES += \
     libwpa_client
 

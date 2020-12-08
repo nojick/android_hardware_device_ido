@@ -1,3 +1,4 @@
+
 # Copyright (C) 2015 The CyanogenMod Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,5 +31,13 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := atomic.cpp
 LOCAL_MODULE := libshim_atomic
 LOCAL_MODULE_CLASS := SHARED_LIBRARIES
+LOCAL_VENDOR_MODULE := true
+include $(BUILD_SHARED_LIBRARY)
+
+include $(CLEAR_VARS)
+LOCAL_SRC_FILES := libprotobuf_shim.cpp
+LOCAL_SHARED_LIBRARIES := liblog
+LOCAL_MODULE := libprotobuf_shim
+LOCAL_MODULE_TAGS := optional
 LOCAL_VENDOR_MODULE := true
 include $(BUILD_SHARED_LIBRARY)
