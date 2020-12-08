@@ -51,7 +51,6 @@ PRODUCT_PACKAGES += \
     camera.msm8916 \
     libmm-qcamera \
     libshim_camera \
-    Snap
     Camera2
 
 PRODUCT_PACKAGES += \
@@ -64,7 +63,6 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_PACKAGES += \
     android.hardware.ir@1.0-impl
-    
 
 # Fingerprint
 PRODUCT_COPY_FILES += \
@@ -123,6 +121,13 @@ PRODUCT_COPY_FILES += \
     frameworks/av/services/audiopolicy/config/a2dp_in_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/a2dp_in_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/bluetooth_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
+
+#PRODUCT_PACKAGES += \
+#android.hardware.audio.common@4.0 \
+#android.hardware.audio.common@4.0-util \
+#android.hardware.audio.effect@4.0 \
+#android.hardware.audio@4.0 \
+#android.hardware.soundtrigger@2.2 \
 # Permissions
 PRODUCT_COPY_FILES += \
 frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/vendor/etc/permissions/android.hardware.audio.low_latency.xml \
