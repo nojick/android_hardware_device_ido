@@ -19,8 +19,8 @@ $(call inherit-product, vendor/xiaomi/ido/ido-vendor.mk)
 
 TARGET_BOOT_ANIMATION_RES := 720
 PRODUCT_PACKAGES += \
-Dirac
-PRODUCT_PACKAGES += com.android.apex.cts.shim.v1_with_prebuilts.flattened
+Dirac 
+
 # Overlay
 DEVICE_PACKAGE_OVERLAYS += \
     $(LOCAL_PATH)/overlay \
