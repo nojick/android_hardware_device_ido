@@ -16,16 +16,7 @@
 ** limitations under the License.
 */
 -->
-<resources>
-    <!-- Whether the always on display mode is available. 
-    <bool name="config_dozeAlwaysOnDisplayAvailable">true</bool>-->
-
-    <!-- Control whether the always on display mode is enabled by default. This value will be used
-         during initialization when the setting is still null.
-    <bool name="config_dozeAlwaysOnEnabled">false</bool> -->
-        <!-- Doze: does this device support STATE_DOZE and STATE_DOZE_SUSPEND? 
-    <bool name="doze_display_state_supported">true</bool> -->
-    
+<resources> 
     <!-- Doze: when to pulse after a buzzworthy notification arrives 
     <string name="doze_pulse_schedule" translatable="false">10s,30s,60s,180s</string>-->
     <!-- Doze: check proximity sensor before pulsing from intent? 
