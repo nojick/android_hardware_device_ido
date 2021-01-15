@@ -43,7 +43,12 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cutils/properties.h>
 #ifdef WCNSS_QMI
 #include "wcnss_qmi_client.h"
+#ifdef MDM_DETECT
 #include "mdm_detect.h"
+#endif
+#endif
+#ifdef WCNSS_QMI_OSS
+#include <dlfcn.h>
 #endif
 
 #define SUCCESS 0
@@ -73,7 +78,6 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define WLAN_INI_FILE_SOURCE "/vendor/etc/wifi/WCNSS_qcom_cfg.ini"
 #define WCNSS_HAS_CAL_DATA\
 		"/sys/module/wcnsscore/parameters/has_calibrated_data"
-#define WLAN_DRIVER_ATH_DEFAULT_VAL "0"
 
 #define ASCII_A		65
 #define ASCII_a		97
@@ -81,10 +85,14 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define HEXA_A		10
 #define HEX_BASE		16
 
-#ifdef WCNSS_QMI
+#if defined (WCNSS_QMI) || defined(WCNSS_QMI_OSS)
 #define WLAN_ADDR_SIZE   6
 unsigned char wlan_nv_mac_addr[WLAN_ADDR_SIZE];
+#ifdef WCNSS_QMI_MAC_ADDR_REV
+#define MAC_ADDR_ARRAY(a) (a)[5], (a)[4], (a)[3], (a)[2], (a)[1], (a)[0]
+#else
 #define MAC_ADDR_ARRAY(a) (a)[0], (a)[1], (a)[2], (a)[3], (a)[4], (a)[5]
+#endif
 #define MAC_ADDRESS_STR "%02x:%02x:%02x:%02x:%02x:%02x"
 
 /* As we Want to write in 00:0a:f5:11:22:33 format in sysfs file
@@ -390,17 +398,15 @@ unsigned int convert_string_to_hex(char* string)
 }
 
 
-#ifdef WCNSS_QMI
+#if defined(WCNSS_QMI) || defined(WCNSS_QMI_OSS)
 void setup_wcnss_parameters(int *cal, int nv_mac_addr)
 #else
 void setup_wcnss_parameters(int *cal)
 #endif
 {
 	char msg[WCNSS_MAX_CMD_LEN];
-	char serial[PROPERTY_VALUE_MAX];
 	int fd, rc, pos = 0;
 	struct stat st;
-	unsigned int serial_num = 0;
 
 	fd = open(WCNSS_CTRL, O_WRONLY);
 	if (fd < 0) {
@@ -408,37 +414,27 @@ void setup_wcnss_parameters(int *cal)
 		return;
 	}
 
-	rc = property_get("ro.serialno", serial, "");
-	if (rc) {
-		serial_num = convert_string_to_hex(serial);
-		ALOGE("Serial Number is  %x", serial_num);
-
-		msg[pos++] = WCNSS_USR_SERIAL_NUM >> BYTE_1;
-		msg[pos++] = WCNSS_USR_SERIAL_NUM >> BYTE_0;
-		msg[pos++] = serial_num >> BYTE_3;
-		msg[pos++] = serial_num >> BYTE_2;
-		msg[pos++] = serial_num >> BYTE_1;
-		msg[pos++] = serial_num >> BYTE_0;
-
-		if (write(fd, msg, pos) < 0) {
-			ALOGE("Failed to write to %s : %s", WCNSS_CTRL,
-					strerror(errno));
-			goto fail;
-		}
-	}
-
-#ifdef WCNSS_QMI
+#if defined(WCNSS_QMI) || defined (WCNSS_QMI_OSS)
 	if (SUCCESS == nv_mac_addr)
 	{
 		pos = 0;
 		msg[pos++] = WCNSS_USR_WLAN_MAC_ADDR >> BYTE_1;
 		msg[pos++] = WCNSS_USR_WLAN_MAC_ADDR >> BYTE_0;
+#ifdef WCNSS_QMI_MAC_ADDR_REV
+		msg[pos++] = wlan_nv_mac_addr[5];
+		msg[pos++] = wlan_nv_mac_addr[4];
+		msg[pos++] = wlan_nv_mac_addr[3];
+		msg[pos++] = wlan_nv_mac_addr[2];
+		msg[pos++] = wlan_nv_mac_addr[1];
+		msg[pos++] = wlan_nv_mac_addr[0];
+#else
 		msg[pos++] = wlan_nv_mac_addr[0];
 		msg[pos++] = wlan_nv_mac_addr[1];
 		msg[pos++] = wlan_nv_mac_addr[2];
 		msg[pos++] = wlan_nv_mac_addr[3];
 		msg[pos++] = wlan_nv_mac_addr[4];
 		msg[pos++] = wlan_nv_mac_addr[5];
+#endif
 
 		ALOGI("WLAN MAC Addr:" MAC_ADDRESS_STR,
 			MAC_ADDR_ARRAY(wlan_nv_mac_addr));
@@ -494,12 +490,7 @@ fail:
 	return;
 }
 
-void setup_wlan_driver_ath_prop()
-{
-	property_set("vendor.wlan.driver.ath", WLAN_DRIVER_ATH_DEFAULT_VAL);
-}
-
-#ifdef WCNSS_QMI
+#ifdef MDM_DETECT
 int check_modem_compatability(struct dev_info *mdm_detect_info)
 {
 	char args[MODEM_BASEBAND_PROPERTY_SIZE] = {0};
@@ -721,20 +712,99 @@ void dynamic_nv_replace()
 
 }
 
+#ifdef WCNSS_QMI_OSS
+static void *wcnss_qmi_handle = NULL;
+static int (*wcnss_init_qmi)(void) = NULL;
+static int (*wcnss_qmi_get_wlan_address)(unsigned char *) = NULL;
+static void (*wcnss_qmi_deinit)(void) = NULL;
+
+static int setup_wcnss_qmi(void)
+{
+	const char *error = NULL;
+
+	/* initialize the DMS client and request the wlan mac address */
+	wcnss_qmi_handle = dlopen("libwcnss_qmi.so", RTLD_NOW);
+	if (!wcnss_qmi_handle) {
+		ALOGE("Failed to open libwcnss_qmi.so: %s", dlerror());
+		goto dlopen_err;
+	}
+
+	dlerror();
+
+	wcnss_init_qmi = dlsym(wcnss_qmi_handle, "wcnss_init_qmi");
+	if ((error = dlerror()) != NULL) {
+		ALOGE("Failed to resolve function: %s: %s",
+				"wcnss_init_qmi", error);
+		goto dlsym_err;
+	}
+
+	dlerror();
+
+	wcnss_qmi_get_wlan_address = dlsym(wcnss_qmi_handle,
+			"wcnss_qmi_get_wlan_address");
+	if ((error = dlerror()) != NULL) {
+		ALOGE("Failed to resolve function: %s: %s",
+				"wcnss_qmi_get_wlan_address", error);
+		goto dlsym_err;
+	}
+
+	dlerror();
+
+	wcnss_qmi_deinit = dlsym(wcnss_qmi_handle, "wcnss_qmi_deinit");
+	if ((error = dlerror()) != NULL) {
+		ALOGE("Failed to resolve function: %s: %s",
+				"wcnss_qmi_deinit", error);
+		goto dlsym_err;
+	}
+
+	return SUCCESS;
+
+dlsym_err:
+	dlclose(wcnss_qmi_handle);
+dlopen_err:
+	return FAILED;
+}
+#endif
+
 int main(int argc, char *argv[])
 {
 	UNUSED(argc), UNUSED(argv);
 	int rc;
 	int fd_dev, ret_cal;
-#ifdef WCNSS_QMI
+#if defined(WCNSS_QMI) || defined(WCNSS_QMI_OSS)
 	int nv_mac_addr = FAILED;
+#ifdef MDM_DETECT
 	struct dev_info mdm_detect_info;
 	int nom = 0;
+#endif
 #endif
 
 	setup_wlan_config_file();
 
+#ifdef WCNSS_QMI_OSS
+	/* dlopen WCNSS QMI lib */
+
+	rc = setup_wcnss_qmi();
+	if (rc == SUCCESS) {
+		if (SUCCESS == (*wcnss_init_qmi)()) {
+			rc = (*wcnss_qmi_get_wlan_address)(wlan_nv_mac_addr);
+			if (rc == SUCCESS) {
+				nv_mac_addr = SUCCESS;
+				ALOGE("WLAN MAC Addr:" MAC_ADDRESS_STR,
+						MAC_ADDR_ARRAY(wlan_nv_mac_addr));
+			} else
+				ALOGE("Failed to Get MAC addr from modem");
+
+			(*wcnss_qmi_deinit)();
+		}
+		else
+			ALOGE("Failed to Initialize wcnss QMI Interface");
+	} else {
+		ALOGE("Failed to Initialize wcnss QMI interface library");
+	}
+#endif
 #ifdef WCNSS_QMI
+#ifdef MDM_DETECT
 	/* Call ESOC API to get the number of modems.
 	   If the number of modems is not zero, only then proceed
 	   with the eap_proxy intialization.*/
@@ -756,6 +826,7 @@ int main(int argc, char *argv[])
 		ALOGE("wcnss_service: Target does not have external modem");
 		goto nomodem;
 	}
+#endif
 
 	/* initialize the DMS client and request the wlan mac address */
 
@@ -780,7 +851,7 @@ nomodem:
 
 	dynamic_nv_replace();
 
-#ifdef WCNSS_QMI
+#if defined(WCNSS_QMI) || defined(WCNSS_QMI_OSS)
 	setup_wcnss_parameters(&ret_cal, nv_mac_addr);
 #else
 	setup_wcnss_parameters(&ret_cal);
@@ -801,8 +872,6 @@ nomodem:
 			ALOGE("Cal data is successfully written to WCNSS");
 	}
 
-	setup_wlan_driver_ath_prop();
-
 	rc = wcnss_read_and_store_cal_data(fd_dev);
 	if (rc != SUCCESS)
 		ALOGE("Failed to read and save cal data %d", rc);
@@ -811,6 +880,10 @@ nomodem:
 			WCNSS_CAL_FILE);
 
 	close(fd_dev);
+
+#ifdef WCNSS_QMI_OSS
+	dlclose(wcnss_qmi_handle);
+#endif
 
 	return rc;
 }
