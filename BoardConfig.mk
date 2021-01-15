@@ -27,11 +27,8 @@ BUILD_BROKEN_USES_BUILD_COPY_HEADERS := true
 TEMPORARY_DISABLE_PATH_RESTRICTIONS := true
 TARGET_OTA_ALLOW_NON_AB := true
 BUILD_BROKEN_PREBUILT_ELF_FILES := true
-#ALLOW_MISSING_DEPENDENCIES=true
 
 DEVICE_PATH := device/xiaomi/ido
-#TARGET_KERNEL_CROSS_COMPILE_PREFIX := aarch64-linux-android-
-#$shell mkdir -p $(OUT_DIR)/obj/KERNEL_OBJ/usr)
 
 # Audio
 AUDIO_FEATURE_ENABLED_ANC_HEADSET := true
@@ -52,17 +49,6 @@ TARGET_PROCESS_SDK_VERSION_OVERRIDE += \
 # Charger
 BOARD_CHARGER_ENABLE_SUSPEND := true
 BOARD_CHARGER_DISABLE_INIT_BLANK := true
-
-
-# Dexpreopt
-ifeq ($(HOST_OS),linux)
-  ifneq ($(TARGET_BUILD_VARIANT),eng)
-    WITH_DEXPREOPT_DEBUG_INFO := false
-    USE_DEX2OAT_DEBUG := false
-    DONT_DEXPREOPT_PREBUILTS := true
-    WITH_DEXPREOPT_BOOT_IMG_AND_SYSTEM_SERVER_ONLY := true
-  endif
-endif
 
 # memfd
 TARGET_HAS_MEMFD_BACKPORT := true
@@ -109,9 +95,7 @@ BOARD_NO_SECURE_DISCARD := true
 # SELinux
 BOARD_SEPOLICY_DIRS += \
     $(DEVICE_PATH)/sepolicy
-# SHIM
-#TARGET_LD_SHIM_LIBS += \
-#     /system/vendor/lib/mediadrm/libwvdrmengine.so|libprotobuf_shim.so
+
 # Shims
 TARGET_LD_SHIM_LIBS += \
     /system/vendor/lib64/libril-qc-qmi-1.so|libshim_audioclient.so \

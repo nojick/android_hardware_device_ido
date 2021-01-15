@@ -95,7 +95,8 @@ PRODUCT_COPY_FILES += \
 # Init scripts
 PRODUCT_PACKAGES += \
     fstab.qcom \
-    init.target.rc
+    init.target.rc \
+    init.qcom.post_boot.sh
 
 # Keylayout
 PRODUCT_COPY_FILES += \
@@ -122,12 +123,6 @@ PRODUCT_COPY_FILES += \
     frameworks/av/services/audiopolicy/config/bluetooth_audio_policy_configuration.xml:$(TARGET_COPY_OUT_VENDOR)/etc/bluetooth_audio_policy_configuration.xml \
     frameworks/av/services/audiopolicy/config/default_volume_tables.xml:$(TARGET_COPY_OUT_VENDOR)/etc/default_volume_tables.xml \
 
-#PRODUCT_PACKAGES += \
-#android.hardware.audio.common@4.0 \
-#android.hardware.audio.common@4.0-util \
-#android.hardware.audio.effect@4.0 \
-#android.hardware.audio@4.0 \
-#android.hardware.soundtrigger@2.2 \
 # Permissions
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.audio.low_latency.xml:system/vendor/etc/permissions/android.hardware.audio.low_latency.xml \
@@ -196,9 +191,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_wlan_nv.bin:system/vendor/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin \
     $(LOCAL_PATH)/wifi/WCNSS_wlan_dictionary.dat:system/vendor/firmware/wlan/prima/WCNSS_wlan_dictionary.dat
 
-# Widevine DRM
-#PRODUCT_PACKAGES += \
-#    libprotobuf_shim
 PRODUCT_PACKAGES += \
     ims-ext-common_system \
     ims_ext_common.xml \
