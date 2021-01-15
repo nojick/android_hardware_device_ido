@@ -49,4 +49,4 @@ ro.telephony.call_ring.multiple=false
 persist.data.qmi.adb_logmask=0
 
 # Maintainer
-ro.mk.maintainer=guaiyihu
+ro.mk.maintainer=nojick
