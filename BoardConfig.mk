@@ -100,6 +100,7 @@ BOARD_SEPOLICY_DIRS += \
 
 # Shims
 TARGET_LD_SHIM_LIBS += \
+    /system/vendor/lib64/hw/android.hardware.bluetooth@1.0-impl-qti.so|libbase-v28.so \
     /system/vendor/lib64/libril-qc-qmi-1.so|libshim_audioclient.so \
     /system/vendor/bin/mm-qcamera-daemon|libshim_camera.so:/system/vendor/bin/perfd|libshim_atomic.so \
     /system/vendor/lib/hw/sound_trigger.primary.msm8916.so|libshim_atomic.so
