@@ -54,8 +54,8 @@ PRODUCT_PACKAGES += \
     Camera2
 
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-impl \
-    camera.device@1.0-impl
+    android.hardware.camera.provider@2.5-service \
+
 
 # Consumerir
 PRODUCT_COPY_FILES += \
