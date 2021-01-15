@@ -23,8 +23,7 @@ cc_library_static {
         "system/core/init",
         "external/selinux/libselinux/include",
     ],
-    static_libs: [
+    shared_libs: [
         "libbase"
-    ],
-    cflags: ["-Wall"]
+    ]
 }

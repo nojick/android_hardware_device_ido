@@ -1,6 +1,7 @@
 /*
    Copyright (c) 2016, The CyanogenMod Project
-   Copyright (c) 2017, The LineageOS Project
+   Copyright (c) 2017, The XPerience Project
+   Copyright (c) 2020, The LineageOS Project
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
    met:
@@ -26,63 +27,89 @@
    IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/sysinfo.h>
-
+#include <android-base/file.h>
+#include <android-base/logging.h>
 #include <android-base/properties.h>
 #include <android-base/strings.h>
+#include <fcntl.h>
+#include <iostream>
+#include <sstream>
+#include <stdlib.h>
+#include <string>
+#define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
+#include <sys/_system_properties.h>
+#include <sys/sysinfo.h>
 
-
-#include "vendor_init.h"
 #include "property_service.h"
+#include "vendor_init.h"
 
-char const *heapstartsize;
-char const *heapgrowthlimit;
-char const *heapsize;
-char const *heapminfree;
-char const *heapmaxfree;
+using android::base::GetProperty;
 
-using android::base::Trim;
-using android::base::SetProperty;
-void check_device()
-{
+static std::string board_id;
+
+static void property_override(char const prop[], char const value[]) {
+    prop_info *pi;
+
+    pi = (prop_info*) __system_property_find(prop);
+    if (pi)
+        __system_property_update(pi, value, strlen(value));
+    else
+        __system_property_add(prop, strlen(prop), value, strlen(value));
+}
+
+static bool is3GBram() {
     struct sysinfo sys;
-
     sysinfo(&sys);
+    return sys.totalram > 2048ull * 1024 * 1024;
+}
 
-    if (sys.totalram > 2048ull * 1024 * 1024) {
-        // from - phone-xxhdpi-3072-dalvik-heap.mk
-        heapstartsize = "8m";
-        heapgrowthlimit = "288m";
-        heapsize = "768m";
-        heapminfree = "512k";
-    } else {
-        // from - phone-xxhdpi-2048-dalvik-heap.mk
-        heapstartsize = "16m";
-        heapgrowthlimit = "192m";
-        heapsize = "512m";
-        heapminfree = "2m";
+static void import_kernel_cmdline_land(bool in_qemu,
+                           const std::function<void(const std::string&, const std::string&, bool)>& fn) {
+    std::string cmdline;
+    android::base::ReadFileToString("/proc/cmdline", &cmdline);
+    for (const auto& entry : android::base::Split(android::base::Trim(cmdline), " ")) {
+        std::vector<std::string> pieces = android::base::Split(entry, "=");
+        /* The board_id entry has two equal signs, so accept more than two pieces */
+        if (pieces.size() >= 2) { // original -> == 2
+            fn(pieces[0], pieces[1], in_qemu);
+        }
     }
 }
 
-void init_target_properties()
-{
-    check_device();
+static void parse_cmdline_boardid(const std::string& key,
+        const std::string& value, bool for_emulator __attribute__((unused))) {
+    if (key.empty())
+        return;
 
-    SetProperty("dalvik.vm.heapstartsize", heapstartsize);
-    SetProperty("dalvik.vm.heapgrowthlimit", heapgrowthlimit);
-    SetProperty("dalvik.vm.heapsize", heapsize);
-    SetProperty("dalvik.vm.heaptargetutilization", "0.75");
-    SetProperty("dalvik.vm.heapminfree", heapminfree);
-    SetProperty("dalvik.vm.heapmaxfree", "8m");
-
+    /* Here our value is board_id:board_vol; we only want the first part */
+    if (key == "board_id") {
+        std::istringstream iss(value);
+        std::string token;
+        std::getline(iss, token, ':');
+        board_id = token;
+    }
 }
 
-void vendor_load_properties()
-{
-    // Init a dummy BT MAC address, will be overwritten later
-    SetProperty("ro.boot.btmacaddr", "00:00:00:00:00:00");
-    init_target_properties();
+static void set_ramconfig() {
+    if (is3GBram()) {
+        property_override("dalvik.vm.heapstartsize", "8m");
+        property_override("dalvik.vm.heapgrowthlimit", "288m");
+        property_override("dalvik.vm.heapsize", "768m");
+        property_override("dalvik.vm.heaptargetutilization", "0.75");
+        property_override("dalvik.vm.heapminfree", "512k");
+        property_override("dalvik.vm.heapmaxfree", "8m");
+    } else {
+        property_override("dalvik.vm.heapstartsize", "8m");
+        property_override("dalvik.vm.heapgrowthlimit", "192m");
+        property_override("dalvik.vm.heapsize", "512m");
+        property_override("dalvik.vm.heaptargetutilization", "0.75");
+        property_override("dalvik.vm.heapminfree", "2m");
+        property_override("dalvik.vm.heapmaxfree", "8m");
+    }
+}
+
+
+
+void vendor_load_properties() {
+    set_ramconfig();
 }
