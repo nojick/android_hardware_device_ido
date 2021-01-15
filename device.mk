@@ -154,7 +154,8 @@ PRODUCT_COPY_FILES += \
 
 # Shim
 PRODUCT_PACKAGES += \
-    libshim_atomic
+    libshim_atomic \
+    libshim_audioclient
 
 # Thermal
 PRODUCT_COPY_FILES += \
@@ -198,6 +199,14 @@ PRODUCT_COPY_FILES += \
 # Widevine DRM
 #PRODUCT_PACKAGES += \
 #    libprotobuf_shim
+PRODUCT_PACKAGES += \
+    ims-ext-common_system \
+    ims_ext_common.xml \
+    qti-telephony-hidl-wrapper \
+    qti_telephony_hidl_wrapper.xml \
+    qti-telephony-utils \
+    qti_telephony_utils.xml \
+    telephony-ext
 
 PRODUCT_PACKAGES += \
     libwpa_client
