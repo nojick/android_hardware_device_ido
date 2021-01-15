@@ -15,3 +15,8 @@
 
 PRODUCT_MAKEFILES := \
     $(LOCAL_DIR)/lineage_ido.mk
+    
+COMMON_LUNCH_CHOICES := \
+    lineage_ido-eng \
+    lineage_ido-userdebug \
+    lineage_ido-user
