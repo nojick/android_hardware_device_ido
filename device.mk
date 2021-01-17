@@ -181,6 +181,10 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 # Vendor security patch level
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.mk.build.vendor_security_patch=2017-01-01
+    
+# Dalvik dex2oat
+PRODUCT_PROPERTY_OVERRIDES += \
+dalvik.vm.dex2oat64.enabled=true
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/privapp-permissions-qti.xml:$(TARGET_COPY_OUT_SYSTEM)/etc/permissions/privapp-permissions-qti.xml
