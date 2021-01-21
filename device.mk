@@ -203,6 +203,9 @@ PRODUCT_PACKAGES += \
     qti-telephony-utils \
     qti_telephony_utils.xml \
     telephony-ext
+    
+PRODUCT_PACKAGES += \
+vndservicemanager
 
 PRODUCT_PACKAGES += \
     libwpa_client
