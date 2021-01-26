@@ -63,43 +63,16 @@ static bool is3GBram() {
     return sys.totalram > 2048ull * 1024 * 1024;
 }
 
-static void import_kernel_cmdline_land(bool in_qemu,
-                           const std::function<void(const std::string&, const std::string&, bool)>& fn) {
-    std::string cmdline;
-    android::base::ReadFileToString("/proc/cmdline", &cmdline);
-    for (const auto& entry : android::base::Split(android::base::Trim(cmdline), " ")) {
-        std::vector<std::string> pieces = android::base::Split(entry, "=");
-        /* The board_id entry has two equal signs, so accept more than two pieces */
-        if (pieces.size() >= 2) { // original -> == 2
-            fn(pieces[0], pieces[1], in_qemu);
-        }
-    }
-}
-
-static void parse_cmdline_boardid(const std::string& key,
-        const std::string& value, bool for_emulator __attribute__((unused))) {
-    if (key.empty())
-        return;
-
-    /* Here our value is board_id:board_vol; we only want the first part */
-    if (key == "board_id") {
-        std::istringstream iss(value);
-        std::string token;
-        std::getline(iss, token, ':');
-        board_id = token;
-    }
-}
-
 static void set_ramconfig() {
     if (is3GBram()) {
-        property_override("dalvik.vm.heapstartsize", "8m");
+        property_override("dalvik.vm.heapstartsize", "16m");
         property_override("dalvik.vm.heapgrowthlimit", "288m");
         property_override("dalvik.vm.heapsize", "768m");
         property_override("dalvik.vm.heaptargetutilization", "0.75");
         property_override("dalvik.vm.heapminfree", "512k");
         property_override("dalvik.vm.heapmaxfree", "8m");
     } else {
-        property_override("dalvik.vm.heapstartsize", "8m");
+        property_override("dalvik.vm.heapstartsize", "16m");
         property_override("dalvik.vm.heapgrowthlimit", "192m");
         property_override("dalvik.vm.heapsize", "512m");
         property_override("dalvik.vm.heaptargetutilization", "0.75");
