@@ -51,7 +51,7 @@ PRODUCT_PACKAGES += \
     camera.msm8916 \
     libmm-qcamera \
     libshim_camera \
-    Camera2
+    Snap
 
 PRODUCT_PACKAGES += \
     android.hardware.camera.provider@2.5-service \
