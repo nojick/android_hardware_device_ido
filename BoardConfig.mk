@@ -89,7 +89,9 @@ TARGET_KERNEL_CONFIG := mokee_ido_defconfig
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
 BOARD_RAMDISK_OFFSET     := 0x02000000
-
+TARGET_KERNEL_ADDITIONAL_FLAGS := \
+    HOSTCFLAGS="-fuse-ld=lld -Wno-unused-command-line-argument"
+    
 # Power
 TARGET_HAS_NO_POWER_STATS := true
 
