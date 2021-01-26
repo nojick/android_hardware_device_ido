@@ -75,6 +75,8 @@ USE_DEVICE_SPECIFIC_GPS := true
 
 # HIDL
 #DEVICE_MANIFEST_FILE += $(DEVICE_PATH)/manifest.xml
+# Compatibility Matrix
+DEVICE_MATRIX_FILE := $(DEVICE_PATH)/compatibility_matrix.xml
 
 # Init
 TARGET_INIT_VENDOR_LIB := libinit_ido
