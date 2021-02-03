@@ -191,6 +191,9 @@ PRODUCT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.control_privapp_permissions=enforce
 
+PRODUCT_PROPERTY_OVERRIDES += \
+    iorapd.perfetto.enable=true \
+
 # Dalvik dex2oat
 PRODUCT_PROPERTY_OVERRIDES += \
 dalvik.vm.dex2oat64.enabled=true
