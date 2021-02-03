@@ -187,6 +187,10 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.mk.build.vendor_security_patch=2017-01-01
     
+# Privapp-permissions whitelisting
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.control_privapp_permissions=enforce
+
 # Dalvik dex2oat
 PRODUCT_PROPERTY_OVERRIDES += \
 dalvik.vm.dex2oat64.enabled=true
