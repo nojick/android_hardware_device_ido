@@ -58,8 +58,10 @@ PRODUCT_PACKAGES += \
     Snap
 
 PRODUCT_PACKAGES += \
-    android.hardware.camera.provider@2.4-impl \
-    camera.device@1.0-impl
+    android.hardware.camera.provider@2.5-impl \
+    android.hardware.camera.provider@2.5-service \
+    camera.device@1.0-impl \
+    libboringssl-compat \
 
 # Consumerir
 PRODUCT_COPY_FILES += \
