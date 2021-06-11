@@ -66,7 +66,7 @@ OMX_ERRORTYPE mm_jpegdec_event_handler(OMX_HANDLETYPE hComponent,
  *       Destroy the job based paramenters
  *
  **/
-static int32_t mm_jpegdec_destroy_job(mm_jpeg_job_session_t *p_session __unused)
+static int32_t mm_jpegdec_destroy_job(mm_jpeg_job_session_t *p_session)
 {
   int32_t rc = 0;
 
@@ -946,9 +946,9 @@ int32_t mm_jpegdec_destroy_session_by_id(mm_jpeg_obj *my_obj, uint32_t session_i
 
 
 
-OMX_ERRORTYPE mm_jpegdec_ebd(OMX_HANDLETYPE hComponent __unused,
+OMX_ERRORTYPE mm_jpegdec_ebd(OMX_HANDLETYPE hComponent,
   OMX_PTR pAppData,
-  OMX_BUFFERHEADERTYPE *pBuffer __unused)
+  OMX_BUFFERHEADERTYPE *pBuffer)
 {
   mm_jpeg_job_session_t *p_session = (mm_jpeg_job_session_t *) pAppData;
 
@@ -959,7 +959,7 @@ OMX_ERRORTYPE mm_jpegdec_ebd(OMX_HANDLETYPE hComponent __unused,
   return 0;
 }
 
-OMX_ERRORTYPE mm_jpegdec_fbd(OMX_HANDLETYPE hComponent __unused,
+OMX_ERRORTYPE mm_jpegdec_fbd(OMX_HANDLETYPE hComponent,
   OMX_PTR pAppData,
   OMX_BUFFERHEADERTYPE *pBuffer)
 {
@@ -999,12 +999,12 @@ OMX_ERRORTYPE mm_jpegdec_fbd(OMX_HANDLETYPE hComponent __unused,
   return ret;
 }
 
-OMX_ERRORTYPE mm_jpegdec_event_handler(OMX_HANDLETYPE hComponent __unused,
+OMX_ERRORTYPE mm_jpegdec_event_handler(OMX_HANDLETYPE hComponent,
   OMX_PTR pAppData,
   OMX_EVENTTYPE eEvent,
   OMX_U32 nData1,
   OMX_U32 nData2,
-  OMX_PTR pEventData __unused)
+  OMX_PTR pEventData)
 {
   mm_jpeg_job_session_t *p_session = (mm_jpeg_job_session_t *) pAppData;
 

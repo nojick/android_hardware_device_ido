@@ -44,6 +44,11 @@
 #include "mm_jpeg.h"
 #include "mm_jpeg_inlines.h"
 
+#ifdef LOAD_ADSP_RPC_LIB
+#include <dlfcn.h>
+#include <stdlib.h>
+#endif
+
 #define ENCODING_MODE_PARALLEL 1
 #define NUM_OMX_SESSIONS 1;
 
@@ -1741,6 +1746,15 @@ int32_t mm_jpeg_init(mm_jpeg_obj *my_obj)
     pthread_mutex_destroy(&my_obj->job_lock);
   }
 
+#ifdef LOAD_ADSP_RPC_LIB
+  my_obj->adsprpc_lib_handle = dlopen("libadsprpc.so", RTLD_NOW);
+  if (NULL == my_obj->adsprpc_lib_handle) {
+    CDBG_ERROR("%s:%d] Cannot load the library", __func__, __LINE__);
+    /* not returning error here bcoz even if this loading fails
+        we can go ahead with SW JPEG enc */
+  }
+#endif
+
   return rc;
 }
 
@@ -2508,6 +2522,11 @@ int32_t mm_jpeg_destroy_session_unlocked(mm_jpeg_obj *my_obj,
   }
 
   session_id = p_session->sessionId;
+  if ((GET_SESSION_IDX(session_id) >= MM_JPEG_MAX_SESSION)
+    ||(GET_CLIENT_IDX(session_id) >= MAX_JPEG_CLIENT_NUM)) {
+    CDBG_ERROR("%s:%d] Invalid Session or Client id", __func__, __LINE__);
+    return rc;
+  }
 
   /* abort job if in todo queue */
   CDBG("%s:%d] abort todo jobs", __func__, __LINE__);
@@ -2595,6 +2614,13 @@ int32_t mm_jpeg_close(mm_jpeg_obj *my_obj, uint32_t client_hdl)
 
   CDBG("%s:%d] ", __func__, __LINE__);
 
+#ifdef LOAD_ADSP_RPC_LIB
+  if (NULL != my_obj->adsprpc_lib_handle) {
+    dlclose(my_obj->adsprpc_lib_handle);
+    my_obj->adsprpc_lib_handle = NULL;
+  }
+#endif
+
   pthread_mutex_unlock(&my_obj->job_lock);
   CDBG("%s:%d] ", __func__, __LINE__);
 
@@ -2607,9 +2633,9 @@ int32_t mm_jpeg_close(mm_jpeg_obj *my_obj, uint32_t client_hdl)
   return rc;
 }
 
-OMX_ERRORTYPE mm_jpeg_ebd(OMX_HANDLETYPE hComponent __unused,
+OMX_ERRORTYPE mm_jpeg_ebd(OMX_HANDLETYPE hComponent,
   OMX_PTR pAppData,
-  OMX_BUFFERHEADERTYPE *pBuffer __unused)
+  OMX_BUFFERHEADERTYPE *pBuffer)
 {
   mm_jpeg_job_session_t *p_session = (mm_jpeg_job_session_t *) pAppData;
 
@@ -2620,7 +2646,7 @@ OMX_ERRORTYPE mm_jpeg_ebd(OMX_HANDLETYPE hComponent __unused,
   return 0;
 }
 
-OMX_ERRORTYPE mm_jpeg_fbd(OMX_HANDLETYPE hComponent __unused,
+OMX_ERRORTYPE mm_jpeg_fbd(OMX_HANDLETYPE hComponent,
   OMX_PTR pAppData,
   OMX_BUFFERHEADERTYPE *pBuffer)
 {
@@ -2673,12 +2699,12 @@ OMX_ERRORTYPE mm_jpeg_fbd(OMX_HANDLETYPE hComponent __unused,
 
 
 
-OMX_ERRORTYPE mm_jpeg_event_handler(OMX_HANDLETYPE hComponent __unused,
+OMX_ERRORTYPE mm_jpeg_event_handler(OMX_HANDLETYPE hComponent,
   OMX_PTR pAppData,
   OMX_EVENTTYPE eEvent,
   OMX_U32 nData1,
   OMX_U32 nData2,
-  OMX_PTR pEventData __unused)
+  OMX_PTR pEventData)
 {
   mm_jpeg_job_session_t *p_session = (mm_jpeg_job_session_t *) pAppData;
 
