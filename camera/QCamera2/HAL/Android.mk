@@ -83,6 +83,7 @@ LOCAL_SHARED_LIBRARIES += libqdMetaData libqservice libbinder
 
 LOCAL_MODULE_RELATIVE_PATH    := hw
 LOCAL_MODULE := camera.$(TARGET_BOARD_PLATFORM)
+LOCAL_VENDOR_MODULE := true
 LOCAL_32_BIT_ONLY := true
 LOCAL_MODULE_TAGS := optional
 

@@ -80,7 +80,7 @@ LOCAL_SRC_FILES := mm_jpegdec_test.c
 
 LOCAL_MODULE           := mm-jpegdec-interface-test
 LOCAL_32_BIT_ONLY := true
-LOCAL_PRELINK_MODULE   := false
+LOCAL_VENDOR_MODULE := true
 LOCAL_SHARED_LIBRARIES := libcutils libdl libmmjpeg_interface
 
 include $(BUILD_EXECUTABLE)
