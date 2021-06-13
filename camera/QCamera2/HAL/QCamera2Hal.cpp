@@ -52,6 +52,5 @@ camera_module_t HAL_MODULE_INFO_SYM = {
     .open_legacy = NULL,
     .set_torch_mode = NULL,
     .init = NULL,
-#endif
     .reserved = {0}
 };
