@@ -1,5 +1,3 @@
-ifeq ($(call is-vendor-board-platform,QCOM),true)
-OLD_LOCAL_PATH := $(LOCAL_PATH)
 LOCAL_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
@@ -40,6 +38,3 @@ LOCAL_SHARED_LIBRARIES := libdl libcutils liblog
 LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)
-
-LOCAL_PATH := $(OLD_LOCAL_PATH)
-endif
