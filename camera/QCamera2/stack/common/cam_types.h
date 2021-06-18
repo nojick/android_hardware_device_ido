@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2012-2015, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -260,11 +260,6 @@ typedef enum {
     CAM_FORMAT_BAYER_IDEAL_RAW_PLAIN16_14BPP_GRBG,
     CAM_FORMAT_BAYER_IDEAL_RAW_PLAIN16_14BPP_RGGB,
     CAM_FORMAT_BAYER_IDEAL_RAW_PLAIN16_14BPP_BGGR,
-
-    /* UBWC format */
-    CAM_FORMAT_YUV_420_NV12_UBWC,
-
-    CAM_FORMAT_YUV_420_NV21_VENUS,
 
     CAM_FORMAT_MAX
 } cam_format_t;
@@ -629,7 +624,6 @@ typedef struct  {
 typedef enum {
     CAM_STREAMING_MODE_CONTINUOUS, /* continous streaming */
     CAM_STREAMING_MODE_BURST,      /* burst streaming */
-    CAM_STREAMING_MODE_BATCH,      /* stream frames in batches */
     CAM_STREAMING_MODE_MAX
 } cam_streaming_mode_t;
 
@@ -857,7 +851,6 @@ typedef struct {
     cam_focus_distances_info_t focus_dist;       /* focus distance */
     int32_t focus_pos;
     uint32_t focused_frame_idx;
-    cam_focus_mode_type focus_mode;        /* focus mode from backend */
 } cam_auto_focus_data_t;
 
 typedef struct {
