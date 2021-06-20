@@ -1,6 +1,5 @@
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
-
 LOCAL_SRC_FILES := \
     QCamera2Factory.cpp \
     QCamera2Hal.cpp \
@@ -18,6 +17,7 @@ LOCAL_SRC_FILES := \
     wrapper/QualcommCamera.cpp
 
 LOCAL_CFLAGS += -Wall -Wextra -Werror
+LOCAL_CFLAGS += -DHAS_MULTIMEDIA_HINTS
 
 #use media extension
 #ifeq ($(TARGET_USES_MEDIA_EXTENSIONS), true)
@@ -26,6 +26,10 @@ LOCAL_CFLAGS += -DUSE_MEDIA_EXTENSIONS
 
 #Debug logs are enabled
 #LOCAL_CFLAGS += -DDISABLE_DEBUG_LOG
+
+#ifeq ($(TARGET_USES_AOSP),true)
+#LOCAL_CFLAGS += -DVANILLA_HAL
+#endif
 
 LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/../stack/common \
@@ -40,21 +44,30 @@ LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/wrapper \
     system/media/camera/include
 
+LOCAL_C_INCLUDES += \
+        $(TARGET_OUT_HEADERS)/qcom/display
+LOCAL_C_INCLUDES += \
+        hardware/qcom/display/libqservice
+
 ifeq ($(TARGET_TS_MAKEUP),true)
 LOCAL_CFLAGS += -DTARGET_TS_MAKEUP
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/tsMakeuplib/include
 endif
-
 LOCAL_HEADER_LIBRARIES := generated_kernel_headers
+
 LOCAL_SHARED_LIBRARIES := libcamera_client liblog libhardware libutils libcutils libdl libsensor
 LOCAL_SHARED_LIBRARIES += libmmcamera_interface libmmjpeg_interface libqdMetaData
 ifeq ($(TARGET_TS_MAKEUP),true)
 LOCAL_SHARED_LIBRARIES += libts_face_beautify_hal libts_detected_face_hal
 endif
+
+LOCAL_SHARED_LIBRARIES += libqdMetaData libqservice libbinder
+
 LOCAL_MODULE_RELATIVE_PATH := hw
+
 LOCAL_MODULE := camera.$(TARGET_BOARD_PLATFORM)
-LOCAL_32_BIT_ONLY := true
 LOCAL_VENDOR_MODULE := true
+LOCAL_32_BIT_ONLY := true
 LOCAL_MODULE_TAGS := optional
 
 include $(BUILD_SHARED_LIBRARY)

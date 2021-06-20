@@ -1,4 +1,4 @@
-/* Copyright (c) 2012-2015, The Linux Foundataion. All rights reserved.
+/* Copyright (c) 2012-2016, The Linux Foundataion. All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
 * modification, are permitted provided that the following conditions are
@@ -818,7 +818,7 @@ int32_t QCameraStream::bufDone(const void *opaque, bool isMetaData)
 {
     int32_t rc = NO_ERROR;
 
-    int index = mStreamBufs->getMatchBufIndex(opaque, isMetaData);
+int index = mStreamBufs->getMatchBufIndex(opaque, isMetaData);
     if (index == -1 || index >= mNumBufs || mBufDefs == NULL) {
         ALOGE("%s: Cannot find buf for opaque data = %p", __func__, opaque);
         return BAD_INDEX;

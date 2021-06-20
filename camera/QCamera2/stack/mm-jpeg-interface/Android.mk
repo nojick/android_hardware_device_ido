@@ -4,7 +4,9 @@ include $(CLEAR_VARS)
 
 LOCAL_CFLAGS += -D_ANDROID_
 
-LOCAL_CFLAGS += -Wall -Wextra -Werror
+LOCAL_CFLAGS += -Wall -Wextra -Werror -Wno-unused-parameter
+
+LOCAL_HEADER_LIBRARIES := generated_kernel_headers
 
 LOCAL_C_INCLUDES += \
     frameworks/native/include/media/openmax \
@@ -31,9 +33,8 @@ LOCAL_SRC_FILES := \
 
 LOCAL_MODULE := libmmjpeg_interface
 LOCAL_32_BIT_ONLY := true
-LOCAL_HEADER_LIBRARIES := generated_kernel_headers
+LOCAL_VENDOR_MODULE := true
 LOCAL_SHARED_LIBRARIES := libdl libcutils liblog libqomx_core
 LOCAL_MODULE_TAGS := optional
-LOCAL_VENDOR_MODULE := true
 
 include $(BUILD_SHARED_LIBRARY)

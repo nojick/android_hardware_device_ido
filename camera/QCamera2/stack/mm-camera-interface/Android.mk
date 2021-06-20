@@ -27,13 +27,14 @@ LOCAL_C_INCLUDES := \
     $(call project-path-for,qcom-media)/mm-core/inc \
     system/media/camera/include
 
+LOCAL_HEADER_LIBRARIES := generated_kernel_headers
+
 LOCAL_CFLAGS += -Wall -Wextra -Werror
 
 LOCAL_MODULE := libmmcamera_interface
 LOCAL_32_BIT_ONLY := true
-LOCAL_HEADER_LIBRARIES := generated_kernel_headers
+LOCAL_VENDOR_MODULE := true
 LOCAL_SHARED_LIBRARIES := libdl libcutils liblog
 LOCAL_MODULE_TAGS := optional
-LOCAL_VENDOR_MODULE := true
 
 include $(BUILD_SHARED_LIBRARY)
