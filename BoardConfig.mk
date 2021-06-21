@@ -52,9 +52,6 @@ TARGET_PROCESS_SDK_VERSION_OVERRIDE += \
     /system/bin/cameraserver=23 \
     /system/bin/mediaserver=23
 
-# Charger
-BOARD_CHARGER_DISABLE_INIT_BLANK := true
-
 # memfd
 TARGET_HAS_MEMFD_BACKPORT := true
 
