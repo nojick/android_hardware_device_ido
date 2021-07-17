@@ -71,6 +71,7 @@ static void set_ramconfig() {
         property_override("dalvik.vm.heaptargetutilization", "0.75");
         property_override("dalvik.vm.heapminfree", "512k");
         property_override("dalvik.vm.heapmaxfree", "8m");
+        property_override("ro.boot.fingerprint", "fpc");
     } else {
         property_override("dalvik.vm.heapstartsize", "16m");
         property_override("dalvik.vm.heapgrowthlimit", "192m");
