@@ -1,0 +1,8 @@
+on init
+    chown system system /proc/touchscreen/disable_keys
+    chmod 0660 /proc/touchscreen/disable_keys
+
+service vendor.touch-hal-1-0-ido /vendor/bin/hw/vendor.lineage.touch@1.0-service.ido
+    class hal
+    user system
+    group system
